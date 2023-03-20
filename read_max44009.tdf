@@ -1,0 +1,162 @@
+include "lpm_counter.inc";
+include "lpm_shiftreg.inc";
+include "lpm_ff.inc";
+
+SUBDESIGN read_max44009( CLK : input; MAX_SCL : output; MAX_SDA : input; MAX_SDA_OE : output;
+						 LED_ON_OFF : output;
+						 t100ms     : input; 
+						 debug[2..0] : output;
+						 max_mux     : output;
+						 led_on_state  : input;
+						 led_off_state : input;
+)
+VARIABLE
+	div_cnt : lpm_counter WITH (LPM_WIDTH=3);
+
+	bit_cnt  : lpm_counter WITH (LPM_WIDTH=6);
+	main_out : lpm_shiftreg WITH (LPM_WIDTH=8);
+	byte_cnt : lpm_counter WITH (LPM_WIDTH=3);
+	
+--	main_in  : lpm_shiftreg WITH (LPM_WIDTH=5); -- 8
+	main_cntr: lpm_counter WITH (LPM_WIDTH=5);
+	main_fsm : machine of bits (bit_c, bit_d) with states(
+					idle   = B"11",
+					startd = B"10",
+					startc = B"00",
+					send_d = B"01",
+					send_c = B"11",
+					send_q = B"01",
+					
+					wr_sr  = B"11",
+					wr_srd = B"10",
+					wr_src = B"00",
+					
+					read_d = B"01",
+					read_c = B"11",
+					read_q = B"01",
+					endq   = B"00",
+					endc   = B"10",
+					endd   = B"11");
+
+	pause  : lpm_counter WITH (LPM_WIDTH = 4);
+	LUX_ff : lpm_ff WITH (LPM_WIDTH = 1);
+	led_on : DFFE;
+	led_off : DFFE;
+	--------------------------
+	timer : lpm_counter WITH (LPM_WIDTH=10, LPM_MODULUS=600);
+	timer_out : NODE;
+BEGIN
+DEFAULTS
+	MAX_SDA_OE = VCC;
+	MAX_SDA_OE = VCC;
+	byte_cnt. cnt_en = GND; 
+	main_out. enable = GND;	
+END DEFAULTS;
+
+	pause. clock = CLK;
+	pause. clk_en = t100ms;
+
+	div_cnt. clock = CLK; -- 5 MHz
+	
+	bit_cnt. clock = CLK;
+	bit_cnt. clk_en = div_cnt.cout;
+	
+	byte_cnt. clock = CLK;
+	byte_cnt. clk_en = div_cnt.cout; 
+	
+	main_out. clock = CLK;
+	CASE byte_cnt.q[] IS
+		WHEN 0 => main_out. data[] = B"10010110"; -- First byte
+--		WHEN 1 => main_out. data[] = B"00000011"; -- Addr
+		WHEN 2 => main_out. data[] = B"10010111"; -- Read command
+		WHEN OTHERS => main_out. data[] = GND;
+	END CASE;
+
+	main_cntr. clock = CLK;
+	main_cntr. clk_en = div_cnt.cout;
+	
+	led_on.clk = CLK;
+	led_on.d   = led_on_state;
+	led_on.ena = t100ms;
+	
+	led_off.clk = CLK;
+	led_off.d   = led_on_state;
+	led_off.ena = t100ms;
+	
+	main_fsm. clk = CLK;
+	main_fsm. ena = div_cnt. cout;
+	CASE main_fsm IS
+		WHEN idle   => if t100ms and ( (led_on_state  and !led_on) or (led_off_state and !led_off)) then
+							main_fsm = startd;
+					 	end if;
+					 	main_out. aset = VCC;
+					 	byte_cnt. sclr = VCC;
+		WHEN startd =>  main_fsm = startc;
+		WHEN startc =>  main_fsm = send_d;
+						bit_cnt. sclr = VCC;
+						main_out. enable = VCC;
+					 	main_out. load = VCC;
+		--------------------------------------					 	
+		WHEN send_d =>  main_fsm = send_c;
+		WHEN send_c =>  main_fsm = send_q;
+		WHEN send_q =>  main_out. enable = div_cnt. cout;
+		
+						if (bit_cnt.q[]==7) or (bit_cnt.q[]==16) then
+							byte_cnt. cnt_en = VCC;
+						end if;
+						
+						if (bit_cnt.q[]==8) then
+							main_out. load = VCC;
+						end if;
+		
+						if bit_cnt.q[]==17 then 
+							main_fsm = wr_sr;
+						elsif bit_cnt.q[]==26 then
+							main_fsm = read_d;
+						else
+							main_fsm = send_d;
+						end if;
+						bit_cnt. cnt_en = VCC;
+
+		WHEN wr_sr  =>  main_fsm = wr_srd;
+		WHEN wr_srd =>  main_fsm = wr_src;
+		WHEN wr_src =>  main_fsm = send_d;
+						main_out. enable = VCC;
+					 	main_out. load = VCC;
+		--------------------------------------					 	
+		WHEN read_d => main_fsm = read_c;
+		WHEN read_c => main_fsm = read_q;
+--						main_in. enable = div_cnt. cout;
+		WHEN read_q => if bit_cnt.q[]==26+9 then 
+							main_fsm = endq;
+						else
+							main_fsm = read_d;
+						end if;
+						bit_cnt. cnt_en = VCC;
+		WHEN endq   =>  main_fsm = endc;
+		WHEN endc   => 	main_fsm = endd;
+							MAX_SDA_OE = GND;
+		WHEN endd   => main_fsm = idle;
+	END CASE;
+------------------------------------------------	
+	MAX_SCL = main_fsm. bit_c;
+	MAX_SDA_OE = main_out.shiftout & main_fsm.bit_d; --  & timer_out;
+	
+	LUX_ff. clock  = CLK;
+	LUX_ff. data[] = MAX_SDA;
+	LUX_ff. enable = (bit_cnt.q[]==26+9-1) & div_cnt. cout & (main_fsm == read_c) & led_on;
+	
+	LED_ON_OFF = !LUX_ff.q[];
+	
+	max_mux = (main_fsm == idle);
+------------------------------------------------
+   debug[0] = LUX_ff.q[0];
+   debug[1] = max_mux;
+   debug[2] = MAX_SDA;
+-------------------------------------------------
+	timer. clock = CLK;
+	timer. clk_en = t100ms;
+
+	timer_out = !SRFFE( timer.q[]==0, timer.q[]==20, CLK, , , t100ms);
+
+END;

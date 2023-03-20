@@ -1,0 +1,144 @@
+Flow report for MAXV_FULL
+Thu Sep 13 13:39:36 2018
+Quartus Prime Version 16.1.2 Build 203 01/18/2017 SJ Standard Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Flow Summary
+  3. Flow Settings
+  4. Flow Non-Default Global Settings
+  5. Flow Elapsed Time
+  6. Flow OS Summary
+  7. Flow Log
+  8. Flow Messages
+  9. Flow Suppressed Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 2017  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel MegaCore Function License Agreement, or other 
+applicable license agreement, including, without limitation, 
+that your use is for the sole purpose of programming logic 
+devices manufactured by Intel and sold by Intel or its 
+authorized distributors.  Please refer to the applicable 
+agreement for further details.
+
+
+
++-------------------------------------------------------------------------+
+; Flow Summary                                                            ;
++-----------------------+-------------------------------------------------+
+; Flow Status           ; Successful - Thu Sep 13 13:39:36 2018           ;
+; Quartus Prime Version ; 16.1.2 Build 203 01/18/2017 SJ Standard Edition ;
+; Revision Name         ; MAXV_FULL                                       ;
+; Top-level Entity Name ; MAXV_FULL                                       ;
+; Family                ; MAX V                                           ;
+; Device                ; 5M240ZT100I5                                    ;
+; Timing Models         ; Final                                           ;
+; Total logic elements  ; 240 / 240 ( 100 % )                             ;
+; Total pins            ; 33 / 79 ( 42 % )                                ;
+; Total virtual pins    ; 0                                               ;
+; UFM blocks            ; 1 / 1 ( 100 % )                                 ;
++-----------------------+-------------------------------------------------+
+
+
++-----------------------------------------+
+; Flow Settings                           ;
++-------------------+---------------------+
+; Option            ; Setting             ;
++-------------------+---------------------+
+; Start date & time ; 09/13/2018 13:39:19 ;
+; Main task         ; Compilation         ;
+; Revision Name     ; MAXV_FULL           ;
++-------------------+---------------------+
+
+
++--------------------------------------------------------------------------------------------------------------------------------------------+
+; Flow Non-Default Global Settings                                                                                                           ;
++------------------------------------+---------------------------------+--------------------------------------+-------------+----------------+
+; Assignment Name                    ; Value                           ; Default Value                        ; Entity Name ; Section Id     ;
++------------------------------------+---------------------------------+--------------------------------------+-------------+----------------+
+; ALLOW_REGISTER_DUPLICATION         ; Off                             ; On                                   ; --          ; --             ;
+; ALLOW_REGISTER_RETIMING            ; Off                             ; On                                   ; --          ; --             ;
+; ALM_REGISTER_PACKING_EFFORT        ; High                            ; Medium                               ; --          ; --             ;
+; AUTO_CARRY_CHAINS                  ; Off                             ; On                                   ; --          ; --             ;
+; AUTO_RESOURCE_SHARING              ; On                              ; Off                                  ; --          ; --             ;
+; COMPILER_SIGNATURE_ID              ; 123745747613552.153683515917555 ; --                                   ; --          ; --             ;
+; EDA_OUTPUT_DATA_FORMAT             ; Vhdl                            ; --                                   ; --          ; eda_simulation ;
+; EDA_SIMULATION_TOOL                ; ModelSim-Altera (VHDL)          ; <None>                               ; --          ; --             ;
+; EDA_TIME_SCALE                     ; 1 ps                            ; --                                   ; --          ; eda_simulation ;
+; FLOW_ENABLE_IO_ASSIGNMENT_ANALYSIS ; On                              ; Off                                  ; --          ; --             ;
+; IGNORE_PARTITIONS                  ; On                              ; Off                                  ; --          ; --             ;
+; MAX_CORE_JUNCTION_TEMP             ; 125                             ; --                                   ; --          ; --             ;
+; MIN_CORE_JUNCTION_TEMP             ; -40                             ; --                                   ; --          ; --             ;
+; MISC_FILE                          ; UFM_NONE.bsf                    ; --                                   ; --          ; --             ;
+; MISC_FILE                          ; UFM_NONE_inst.vhd               ; --                                   ; --          ; --             ;
+; MISC_FILE                          ; UFM_NONE.inc                    ; --                                   ; --          ; --             ;
+; MISC_FILE                          ; UFM_NONE.cmp                    ; --                                   ; --          ; --             ;
+; NUM_PARALLEL_PROCESSORS            ; All                             ; --                                   ; --          ; --             ;
+; OPTIMIZATION_MODE                  ; Aggressive Area                 ; Balanced                             ; --          ; --             ;
+; PHYSICAL_SYNTHESIS_EFFORT          ; Extra                           ; Normal                               ; --          ; --             ;
+; POWER_PRESET_COOLING_SOLUTION      ; No Heat Sink With Still Air     ; --                                   ; --          ; --             ;
+; PROJECT_IP_REGENERATION_POLICY     ; ALWAYS_REGENERATE_IP            ; SKIP_REGENERATING_IP_IF_HDL_MODIFIED ; --          ; --             ;
+; PROJECT_OUTPUT_DIRECTORY           ; output_files                    ; --                                   ; --          ; --             ;
+; ROUTER_EFFORT_MULTIPLIER           ; 4.0                             ; 1.0                                  ; --          ; --             ;
+; ROUTER_REGISTER_DUPLICATION        ; Off                             ; Auto                                 ; --          ; --             ;
+; SAVE_DISK_SPACE                    ; Off                             ; On                                   ; --          ; --             ;
+; WEAK_PULL_UP_RESISTOR              ; On                              ; Off                                  ; --          ; --             ;
++------------------------------------+---------------------------------+--------------------------------------+-------------+----------------+
+
+
++-------------------------------------------------------------------------------------------------------------------------------+
+; Flow Elapsed Time                                                                                                             ;
++---------------------------+--------------+-------------------------+---------------------+------------------------------------+
+; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
++---------------------------+--------------+-------------------------+---------------------+------------------------------------+
+; Analysis & Synthesis      ; 00:00:11     ; 1.0                     ; 973 MB              ; 00:00:22                           ;
+; I/O Assignment Analysis   ; 00:00:01     ; 1.0                     ; 1215 MB             ; 00:00:01                           ;
+; Fitter                    ; 00:00:02     ; 1.0                     ; 1082 MB             ; 00:00:01                           ;
+; Assembler                 ; 00:00:01     ; 1.0                     ; 793 MB              ; 00:00:00                           ;
+; TimeQuest Timing Analyzer ; 00:00:01     ; 1.0                     ; 742 MB              ; 00:00:01                           ;
+; EDA Netlist Writer        ; 00:00:00     ; 1.0                     ; 1025 MB             ; 00:00:00                           ;
+; Total                     ; 00:00:16     ; --                      ; --                  ; 00:00:25                           ;
++---------------------------+--------------+-------------------------+---------------------+------------------------------------+
+
+
++-----------------------------------------------------------------------------------------+
+; Flow OS Summary                                                                         ;
++---------------------------+------------------+------------+------------+----------------+
+; Module Name               ; Machine Hostname ; OS Name    ; OS Version ; Processor type ;
++---------------------------+------------------+------------+------------+----------------+
+; Analysis & Synthesis      ; nsemenoff        ; Arch Linux ; Arch Linux ; x86_64         ;
+; I/O Assignment Analysis   ; nsemenoff        ; Arch Linux ; Arch Linux ; x86_64         ;
+; Fitter                    ; nsemenoff        ; Arch Linux ; Arch Linux ; x86_64         ;
+; Assembler                 ; nsemenoff        ; Arch Linux ; Arch Linux ; x86_64         ;
+; TimeQuest Timing Analyzer ; nsemenoff        ; Arch Linux ; Arch Linux ; x86_64         ;
+; EDA Netlist Writer        ; nsemenoff        ; Arch Linux ; Arch Linux ; x86_64         ;
++---------------------------+------------------+------------+------------+----------------+
+
+
+------------
+; Flow Log ;
+------------
+quartus_map --read_settings_files=on --write_settings_files=off MAXV_v56_I2C -c MAXV_FULL
+quartus_fit --read_settings_files=off --write_settings_files=off MAXV_v56_I2C -c MAXV_FULL --plan
+quartus_fit --read_settings_files=off --write_settings_files=off MAXV_v56_I2C -c MAXV_FULL
+quartus_asm --read_settings_files=off --write_settings_files=off MAXV_v56_I2C -c MAXV_FULL
+quartus_sta MAXV_v56_I2C -c MAXV_FULL
+quartus_eda --read_settings_files=off --write_settings_files=off MAXV_v56_I2C -c MAXV_FULL
+
+
+

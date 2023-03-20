@@ -1,0 +1,204 @@
+include "lpm_ff.inc";
+include "lpm_counter.inc";
+include "lpm_shiftreg.inc";
+
+SUBDESIGN UFM_STORE( CLK : input;
+					TEL_SCL : input;
+					TEL_SDA : input;
+					TEL_SDA_OE : output;
+					---------------------
+					MODE[2..0] : output;
+					BRT0[4..0] : output;
+					---------------------
+					UFM_program : output;
+					UFM_erase   : output;
+					UFM_arclk   : output;
+					UFM_arshift : output;
+					UFM_ardin   : output;
+					UFM_drclk   : output;
+					UFM_drshift : output;
+					UFM_drdin   : output;
+					UFM_busy    : input;
+					UFM_drdout  : input;
+					---------------------
+					debug[2..0] : output;
+					---------------------
+					led_on_off  : input;
+					)
+VARIABLE
+	scl_f : lpm_shiftreg WITH (LPM_WIDTH = 2);
+	sda_f : lpm_shiftreg WITH (LPM_WIDTH = 2);
+	i2c_cntr : lpm_counter WITH (LPM_WIDTH = 5);
+
+	i2c_addr : lpm_shiftreg WITH (LPM_WIDTH = 4);
+	i2c_data : lpm_shiftreg WITH (LPM_WIDTH = 8);
+
+	data_ack : node;
+	data_check : node;
+
+	UFM_fsm : machine of bits (addr_clk, addr_shift, data_clk, data_sh, data_strb, eraser) with states (
+					idle 		   = B"110000",
+					addr_prepare= B"110000",
+					addr_bit0	= B"110000",
+					addr_load	= B"000000",
+					data_read	= B"001000",
+					wait_rd		= B"000000",
+					data_shift	= B"001100",
+					stop		   = B"000000",
+					
+					erase_wait  = B"000000",
+					erase_out   = B"000001",
+					erase_busy  = B"000000",
+					
+					wr_addr		= B"110000",
+					wait_addr   = B"010000",
+					wr_addr0	   = B"110000",
+					wait_data   = B"000000",
+					data_write	= B"000110",
+					data_ak		= B"000000",
+					data_write2 = B"000110",
+					wait_wr		= B"000000",
+					load_ready  = B"000000");
+
+	UFM_addr_cntr : lpm_counter WITH (LPM_WIDTH = 5);
+	UFM_shifter   : lpm_shiftreg WITH (LPM_WIDTH = 5);
+	
+	MODE_ff : lpm_ff WITH (LPM_WIDTH = 3); -- режим свеченнияa
+	BRT0_ff : lpm_ff WITH (LPM_WIDTH = 5); -- яркость свечения светодиода
+	
+BEGIN
+DEFAULTS
+	UFM_ardin   = GND;
+END DEFAULTS;
+--------------------------------------------------------------------------
+	TEL_SDA_OE = data_ack;
+
+--	IF i2c_addr.q[]==B"1010" and data_check THEN
+--		data_ack = ((i2c_cntr.q[]==9) or !i2c_data.shiftout);
+--	ELSE
+		data_ack = ((i2c_cntr.q[]==9) or (i2c_cntr.q[]==18) or (i2c_cntr.q[]==27));
+--	END IF;	
+
+	scl_f. clock = CLK;	scl_f. shiftin = TEL_SCL;
+	sda_f. clock = CLK; 	sda_f. shiftin = TEL_SDA;
+
+	i2c_cntr. clock  = CLK;
+	i2c_cntr. cnt_en = (scl_f.q[1] and !scl_f.q[0]);
+	i2c_cntr. aclr   = (scl_f.q[1] and !sda_f.q[0] and sda_f.q[1]);
+
+	data_check = SRFF( i2c_cntr.q[]==9, i2c_cntr.q[]==0, CLK, , );
+
+	i2c_addr. clock = CLK;
+	i2c_addr. enable = (!scl_f.q[1] and scl_f.q[0]) & (i2c_cntr.q[]<5);
+	i2c_addr. shiftin = sda_f.q[0];
+	
+	i2c_data. clock  = CLK;
+	i2c_data. data[7..1] = B"xxxxxxx";
+	i2c_data. data[0] = led_on_off;
+	i2c_data. enable = (scl_f.q[1] and !scl_f.q[0]);
+	i2c_data. load   = (i2c_cntr.q[]==9);
+------------------------------------------------------------------------------
+	UFM_addr_cntr. clock = CLK;
+	
+	UFM_fsm. clk = CLK;
+	CASE UFM_fsm IS
+		WHEN idle => if !UFM_busy then
+						UFM_fsm = addr_prepare;
+						UFM_addr_cntr. sclr = VCC;
+					 end if;
+		WHEN addr_prepare => if UFM_addr_cntr.q[]==7 then
+								UFM_fsm = addr_bit0;
+							end if;
+		WHEN addr_bit0 => 	UFM_fsm = addr_load;
+							UFM_addr_cntr. sclr = VCC;
+		WHEN addr_load => 	UFM_fsm = data_read;
+							UFM_addr_cntr. sclr = VCC;
+		WHEN data_read =>   UFM_fsm = wait_rd;
+							UFM_addr_cntr. sclr = VCC;
+		WHEN wait_rd => 	if !UFM_busy then
+								UFM_fsm = data_shift;
+							end if;
+							UFM_addr_cntr. sclr = VCC;
+		WHEN data_shift => 	if UFM_addr_cntr.q[]==15 then
+								UFM_fsm = stop;
+							end if;
+		WHEN stop		=> 	if (scl_f.q[1] and !sda_f.q[0] and sda_f.q[1]) then
+								UFM_fsm = wr_addr;
+							end if;
+							UFM_addr_cntr. sclr = VCC;
+		-----------------------------------------------------
+		WHEN erase_wait => UFM_fsm = erase_out;
+		WHEN erase_out  => UFM_fsm = erase_busy;
+		WHEN erase_busy => if !UFM_busy then
+								UFM_fsm = stop;
+					 		end if;
+		-----------------------------------------------------
+		WHEN wr_addr =>   if UFM_addr_cntr.q[]==7 then
+								UFM_fsm = wait_addr;
+						  end if;
+		WHEN wait_addr  =>  if i2c_cntr. q[]==8 then
+								UFM_fsm = wr_addr0;
+						  end if;
+		WHEN wr_addr0 =>  if (i2c_addr.q[]==B"1101") then 
+								UFM_fsm = wait_data;
+						  elsif (i2c_addr.q[]==B"1001") then
+						  		UFM_fsm = erase_wait; -- addr
+						  else
+						  		UFM_fsm = stop;
+						  end if;
+						  UFM_addr_cntr. sclr = VCC;
+		WHEN wait_data => if (i2c_cntr.q[])==10 then
+							 UFM_fsm = data_write;
+						  end if;
+		WHEN data_write=> if i2c_cntr.q[]==18 then
+							 UFM_fsm = data_ak;
+						  end if;
+		WHEN data_ak =>  if i2c_cntr.q[]==19 then
+							 UFM_fsm = data_write2;
+						  end if;
+		WHEN data_write2=> if i2c_cntr.q[]==27 then
+							 UFM_fsm = wait_wr; -- data_end
+						  end if;
+		WHEN wait_wr =>   if !UFM_busy then
+								UFM_fsm = load_ready;
+							end if;
+		WHEN load_ready => UFM_fsm = idle;
+	END CASE;
+
+	UFM_program = (i2c_addr.q[]==B"1101") & (i2c_cntr.q[]==27);
+	UFM_erase   = UFM_fsm. eraser;
+	
+	UFM_arclk   = !CLK & UFM_fsm.addr_clk;
+	UFM_arshift = UFM_fsm. addr_shift;
+
+if UFM_fsm.data_strb then
+	UFM_drclk   = TEL_SCL;
+else
+	UFM_drclk   = !CLK & UFM_fsm.data_clk;
+end if;
+
+	UFM_drshift = UFM_fsm. data_sh;
+	UFM_drdin   = sda_f. q[0];
+
+-----------------------------------------------------------------------------
+	UFM_shifter. clock = CLK;
+	UFM_shifter. enable = UFM_fsm.data_clk;
+	UFM_shifter. shiftin = UFM_drdout;
+
+	MODE_ff.clock  = CLK;
+	MODE_ff.data[2..1] = UFM_shifter. q[1..0];
+	MODE_ff.data[0] = UFM_drdout;
+	MODE_ff.enable = (UFM_fsm==data_shift) & (UFM_addr_cntr.q[]==14);
+
+	BRT0_ff.clock  = CLK;
+	BRT0_ff.data[] = UFM_shifter. q[];
+	BRT0_ff.enable = (UFM_fsm==data_shift) & (UFM_addr_cntr.q[]==4);
+
+	MODE[2..0] = MODE_ff.q[];
+	BRT0[4..0] = BRT0_ff.q[4..0];
+----------------------------------------------------------------------------
+debug[0] = led_on_off;
+debug[1] = GND;
+debug[2] = GND;
+
+END;

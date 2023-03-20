@@ -1,0 +1,131 @@
+include "lpm_counter";
+include "lpm_shiftreg";
+include "lpm_ff";
+
+SUBDESIGN Blinker(  clk : input; -- LED BLINKER
+					LED1, LED0 : output;
+					--------------------------------------
+					LED_MODE[2..0] : input;
+					LED_BRT0[4..0] : input;
+					LED_ON_OFF     : input;
+					t100ms			: output;
+					led_on_state   : output;
+					led_off_state  : output;
+					)
+VARIABLE
+	bright_cnt : lpm_counter WITH (LPM_WIDTH=12);
+	time_100ms_cnt : lpm_counter WITH (LPM_WIDTH = 8, LPM_MODULUS = 121);
+	time_100ms : node;
+
+	blink_time : lpm_counter WITH (LPM_WIDTH=6);
+	blink_count: lpm_counter WITH (LPM_WIDTH=3);
+	blink_fsm  : machine of bits (leds_on, leds_off) with states (idle = B"00", ledon_c = B"00", ledon = B"10", ledoff = B"01", led_plus = B"10", led_9 = B"10");
+
+	bright_led : node;
+
+	LED_PAUSE[5..0] : node;
+	LED_ON[4..0]    : node;
+	LED_OFF[3..0]   : node;
+	LED_CNT[2..0]   : node;
+BEGIN
+DEFAULTS
+	blink_time. cnt_en = VCC;
+	blink_count.cnt_en = GND;
+	led_off_state  = GND;
+	led_on_state  = GND;
+END DEFAULTS;
+
+	bright_cnt. clock = CLK;
+-------------------------------------------------------------------
+	time_100ms_cnt.clk_en = bright_cnt.cout;
+	time_100ms_cnt.clock = CLK;
+	time_100ms = time_100ms_cnt.cout & bright_cnt.cout;
+--	t100ms = time_100ms & (blink_fsm.leds_off or (LED_MODE[] == VCC)); -- pin output, check lux every 100ms if leds_off or constant light
+	t100ms = time_100ms; --  & ((blink_fsm==idle) or (LED_MODE[] == VCC)); -- pin output, check lux every 100ms if leds_off or constant light
+	
+-------------------------------------------------------------------
+	blink_time. clock = CLK;
+	blink_time. clk_en = time_100ms;
+-------------------------------------------------------------------
+	blink_count. clock = CLK;
+	blink_count. clk_en = time_100ms;
+-------------------------------------------------------------------
+	case LED_MODE[] is
+		when 1 => LED_PAUSE[] = 29;		LED_ON[] = 9;		LED_OFF[] = 0;		LED_CNT[] = 0;
+		when 2 => LED_PAUSE[] = 24;		LED_ON[] = 9;		LED_OFF[] = 4;		LED_CNT[] = 1;
+		when 3 => LED_PAUSE[] = 39;		LED_ON[] = 19;		LED_OFF[] = 0; 	LED_CNT[] = 0;
+		when 4 => LED_PAUSE[] = 59;		LED_ON[] = 9;		LED_OFF[] = 4; 	LED_CNT[] = 2;
+		when 5 => LED_PAUSE[] = 29;		LED_ON[] = 9;		LED_OFF[] = 4; 	LED_CNT[] = 7;
+		when 6 => LED_PAUSE[] = 39;		LED_ON[] = 9; 		LED_OFF[] = 4; 	LED_CNT[] = 5;
+		when others => LED_PAUSE[] = 0; 		LED_ON[] = VCC;	LED_OFF[] = 0;		LED_CNT[] = VCC;
+--		when others => LED_PAUSE[] = B"xxxxxx";	LED_ON[] = B"xxxxx";		LED_OFF[] = B"xxxx";		LED_CNT[] = B"xxx";
+	end case;
+
+	blink_fsm.clk = CLK;
+	blink_fsm.ena = time_100ms;
+	case blink_fsm is
+		when idle => 	if LED_MODE[] == VCC then -- LED_ON
+								blink_fsm = ledon;
+							elsif LED_MODE[] == GND then -- LED_OFF
+								blink_fsm = ledoff;
+							elsif blink_time.q[] == LED_PAUSE[] then -- LED_BLINK
+								blink_time.sclr = VCC;
+								blink_count.sclr = VCC;
+								blink_fsm = ledon_c;
+								led_on_state  = VCC;
+							end if;
+		when ledon_c =>   blink_fsm = ledon;
+								blink_time.sclr = VCC;
+		when ledon => 	if (blink_time.q[4..0] == LED_ON[]) then
+								blink_time.sclr = VCC;
+								if !(LED_MODE[] == VCC) then
+									blink_fsm = ledoff;
+									led_off_state  = VCC;
+								else
+									led_on_state  = VCC;
+								end if;
+							end if;
+		when ledoff => if LED_MODE[] == GND then -- LED_OFF
+								blink_fsm = ledoff;
+							elsif blink_time.q[3..0] == LED_OFF[] then
+								blink_time.sclr = VCC;
+								if blink_count.q[] == LED_CNT[] then
+									if LED_MODE[] == 6 then
+										blink_fsm = led_plus;
+									elsif LED_MODE[] == 5 then
+										blink_fsm = led_9;
+									else
+										blink_fsm = idle;
+									end if;
+								else
+									blink_fsm = ledon;
+									blink_count.cnt_en = VCC;
+								end if;
+							end if;
+		when led_plus => if (blink_time.q[3..0] == VCC) then -- LED_ON once more
+									blink_fsm = idle;
+									led_off_state  = VCC;
+								else
+									led_on_state  = VCC;
+								end if;
+		when led_9 =>   if (blink_time.q[3..0] == 9) then -- LED_ON once more
+									blink_fsm = idle;
+									led_off_state  = VCC;
+								else
+									led_on_state  = VCC;
+								end if;
+						
+		when others => blink_fsm = idle;
+	end case;
+-------------------------------------------------------------------
+	bright_led = SRFF(bright_cnt.q[11..7]==0, bright_cnt.q[11..7]==LED_BRT0[], CLK, !(LED_BRT0[]==GND) & LED_ON_OFF, );
+-------------------------------------------------------------------
+	LED0 = (blink_fsm.leds_on & bright_led);
+	LED1 = (!blink_fsm.leds_on & bright_led);
+-------------------------------------------------------------------
+
+--	led_on_state   =  (blink_fsm == ledon_c);
+--	led_off_state  =  (blink_fsm == ledoff_c);
+
+END;
+

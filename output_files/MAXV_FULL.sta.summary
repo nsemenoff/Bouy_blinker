@@ -1,0 +1,25 @@
+------------------------------------------------------------
+TimeQuest Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Setup 'inst11|UFM_NONE_altufm_none_qgr_component|maxii_ufm_block1|osc'
+Slack : 81.818
+TNS   : 0.000
+
+Type  : Hold 'inst11|UFM_NONE_altufm_none_qgr_component|maxii_ufm_block1|osc'
+Slack : -27.572
+TNS   : -54.904
+
+Type  : Recovery 'inst11|UFM_NONE_altufm_none_qgr_component|maxii_ufm_block1|osc'
+Slack : 162.304
+TNS   : 0.000
+
+Type  : Removal 'inst11|UFM_NONE_altufm_none_qgr_component|maxii_ufm_block1|osc'
+Slack : 6.662
+TNS   : 0.000
+
+Type  : Minimum Pulse Width 'inst11|UFM_NONE_altufm_none_qgr_component|maxii_ufm_block1|osc'
+Slack : 60.909
+TNS   : 0.000
+
+------------------------------------------------------------

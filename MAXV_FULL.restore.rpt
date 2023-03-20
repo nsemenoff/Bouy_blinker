@@ -1,0 +1,88 @@
+Restore Archived Project report for MAXV_FULL
+Tue Sep 11 13:36:29 2018
+Quartus Prime Version 16.1.2 Build 203 01/18/2017 SJ Standard Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Restore Archived Project Summary
+  3. Restore Archived Project Messages
+  4. Files Restored
+  5. Files Not Restored
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 2017  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel MegaCore Function License Agreement, or other 
+applicable license agreement, including, without limitation, 
+that your use is for the sole purpose of programming logic 
+devices manufactured by Intel and sold by Intel or its 
+authorized distributors.  Please refer to the applicable 
+agreement for further details.
+
+
+
++-------------------------------------------------------------------------+
+; Restore Archived Project Summary                                        ;
++---------------------------------+---------------------------------------+
+; Restore Archived Project Status ; Successful - Tue Sep 11 13:36:29 2018 ;
+; Revision Name                   ; MAXV_FULL                             ;
+; Top-level Entity Name           ; MAXV_FULL                             ;
+; Family                          ; MAX V                                 ;
++---------------------------------+---------------------------------------+
+
+
++-----------------------------------+
+; Restore Archived Project Messages ;
++-----------------------------------+
+Info: Successfully restored '/home/nick/Quartus/BOUY_v56DM_I2C_river_good/MAXV_v56_I2C_tmp_archive.qar' into the '/home/nick/Quartus/BOUY_v56DM_I2C_lake/' directory
+Info: Generated report 'MAXV_FULL.restore.rpt'
+
+
++-----------------------------------+
+; Files Restored                    ;
++-----------------------------------+
+; File Name                         ;
++-----------------------------------+
+; qar_info.json                     ;
+; Block_schem/MAXV_FULL.bdf         ;
+; MAXV_FULL.qsf                     ;
+; MAXV_FULL_assignment_defaults.qdf ;
+; MAXV_UFM.mif                      ;
+; MAXV_v56_I2C.qpf                  ;
+; MAX_MUX_VHDL.vhd                  ;
+; UFM_NONE.bsf                      ;
+; UFM_NONE.cmp                      ;
+; UFM_NONE.inc                      ;
+; UFM_NONE.qip                      ;
+; UFM_NONE.vhd                      ;
+; UFM_NONE_inst.vhd                 ;
+; VHDL_Sourses/I2C_DRIVER.vhd       ;
+; VHDL_Sourses/I2C_DRIVER2.vhd      ;
+; VHDL_Sourses/SW_UART.tdf          ;
+; assignment_defaults.qdf           ;
+; blinker.tdf                       ;
+; read_max44009.tdf                 ;
+; ufm_store.tdf                     ;
++-----------------------------------+
+
+
++--------------------+
+; Files Not Restored ;
++--------------------+
+; File Name          ;
++--------------------+
+
+

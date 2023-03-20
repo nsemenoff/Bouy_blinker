@@ -1,0 +1,7 @@
+{
+	"common_dir" : "/home/nick/Quartus/BOUY_v56DM_I2C_river_good/",
+	"acds_version" : "Version 16.1.2",
+	"platform" : "linux",
+	"os" : "Arch Linux",
+	"qpf" : "MAXV_v56_I2C.qpf"
+}

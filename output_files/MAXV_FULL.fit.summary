@@ -1,0 +1,11 @@
+Fitter Status : Successful - Thu Sep 13 13:39:33 2018
+Quartus Prime Version : 16.1.2 Build 203 01/18/2017 SJ Standard Edition
+Revision Name : MAXV_FULL
+Top-level Entity Name : MAXV_FULL
+Family : MAX V
+Device : 5M240ZT100I5
+Timing Models : Final
+Total logic elements : 240 / 240 ( 100 % )
+Total pins : 33 / 79 ( 42 % )
+Total virtual pins : 0
+UFM blocks : 1 / 1 ( 100 % )

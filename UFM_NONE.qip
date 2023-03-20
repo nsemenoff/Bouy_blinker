@@ -1,0 +1,8 @@
+set_global_assignment -name IP_TOOL_NAME "ALTUFM_NONE"
+set_global_assignment -name IP_TOOL_VERSION "16.1"
+set_global_assignment -name IP_GENERATED_DEVICE_FAMILY "{MAX V}"
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) "UFM_NONE.vhd"]
+set_global_assignment -name MISC_FILE [file join $::quartus(qip_path) "UFM_NONE.bsf"]
+set_global_assignment -name MISC_FILE [file join $::quartus(qip_path) "UFM_NONE_inst.vhd"]
+set_global_assignment -name MISC_FILE [file join $::quartus(qip_path) "UFM_NONE.inc"]
+set_global_assignment -name MISC_FILE [file join $::quartus(qip_path) "UFM_NONE.cmp"]

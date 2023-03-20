@@ -1,0 +1,128 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 2017  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel MegaCore Function License Agreement, or other 
+applicable license agreement, including, without limitation, 
+that your use is for the sole purpose of programming logic 
+devices manufactured by Intel and sold by Intel or its 
+authorized distributors.  Please refer to the applicable 
+agreement for further details.
+*/
+(header "symbol" (version "1.2"))
+(symbol
+	(rect 0 0 192 208)
+	(text "UFM_NONE" (rect 58 -1 151 17)(font "Dialog" (font_size 10)))
+	(text "inst" (rect 8 192 26 204)(font "Arial" ))
+	(port
+		(pt 0 48)
+		(input)
+		(text "program" (rect 0 0 57 14)(font "Dialog" (font_size 8)))
+		(text "program" (rect 4 34 50 47)(font "Dialog" (font_size 8)))
+		(line (pt 0 48)(pt 64 48))
+	)
+	(port
+		(pt 0 64)
+		(input)
+		(text "erase" (rect 0 0 37 14)(font "Dialog" (font_size 8)))
+		(text "erase" (rect 4 50 35 63)(font "Dialog" (font_size 8)))
+		(line (pt 0 64)(pt 64 64))
+	)
+	(port
+		(pt 0 80)
+		(input)
+		(text "oscena" (rect 0 0 47 14)(font "Dialog" (font_size 8)))
+		(text "oscena" (rect 4 66 42 79)(font "Dialog" (font_size 8)))
+		(line (pt 0 80)(pt 64 80))
+	)
+	(port
+		(pt 0 96)
+		(input)
+		(text "arclk" (rect 0 0 33 14)(font "Dialog" (font_size 8)))
+		(text "arclk" (rect 4 82 31 95)(font "Dialog" (font_size 8)))
+		(line (pt 0 96)(pt 64 96))
+	)
+	(port
+		(pt 0 112)
+		(input)
+		(text "arshft" (rect 0 0 40 14)(font "Dialog" (font_size 8)))
+		(text "arshft" (rect 4 98 37 111)(font "Dialog" (font_size 8)))
+		(line (pt 0 112)(pt 64 112))
+	)
+	(port
+		(pt 0 128)
+		(input)
+		(text "ardin" (rect 0 0 34 14)(font "Dialog" (font_size 8)))
+		(text "ardin" (rect 4 114 32 127)(font "Dialog" (font_size 8)))
+		(line (pt 0 128)(pt 64 128))
+	)
+	(port
+		(pt 0 144)
+		(input)
+		(text "drclk" (rect 0 0 33 14)(font "Dialog" (font_size 8)))
+		(text "drclk" (rect 4 130 31 143)(font "Dialog" (font_size 8)))
+		(line (pt 0 144)(pt 64 144))
+	)
+	(port
+		(pt 0 160)
+		(input)
+		(text "drshft" (rect 0 0 40 14)(font "Dialog" (font_size 8)))
+		(text "drshft" (rect 4 146 37 159)(font "Dialog" (font_size 8)))
+		(line (pt 0 160)(pt 64 160))
+	)
+	(port
+		(pt 0 176)
+		(input)
+		(text "drdin" (rect 0 0 35 14)(font "Dialog" (font_size 8)))
+		(text "drdin" (rect 4 162 32 175)(font "Dialog" (font_size 8)))
+		(line (pt 0 176)(pt 64 176))
+	)
+	(port
+		(pt 192 48)
+		(output)
+		(text "busy" (rect 0 0 31 14)(font "Dialog" (font_size 8)))
+		(text "busy" (rect 162 34 187 47)(font "Dialog" (font_size 8)))
+		(line (pt 192 48)(pt 128 48))
+	)
+	(port
+		(pt 192 64)
+		(output)
+		(text "osc" (rect 0 0 22 14)(font "Dialog" (font_size 8)))
+		(text "osc" (rect 169 50 187 63)(font "Dialog" (font_size 8)))
+		(line (pt 192 64)(pt 128 64))
+	)
+	(port
+		(pt 192 80)
+		(output)
+		(text "drdout" (rect 0 0 46 14)(font "Dialog" (font_size 8)))
+		(text "drdout" (rect 152 66 189 79)(font "Dialog" (font_size 8)))
+		(line (pt 192 80)(pt 128 80))
+	)
+	(port
+		(pt 192 96)
+		(output)
+		(text "rtpbusy" (rect 0 0 50 14)(font "Dialog" (font_size 8)))
+		(text "rtpbusy" (rect 146 82 187 95)(font "Dialog" (font_size 8)))
+		(line (pt 192 96)(pt 128 96))
+	)
+	(drawing
+		(line (pt 64 32)(pt 128 32))
+		(line (pt 128 32)(pt 128 192))
+		(line (pt 64 192)(pt 128 192))
+		(line (pt 64 32)(pt 64 192))
+		(line (pt 0 0)(pt 192 0))
+		(line (pt 192 0)(pt 192 208))
+		(line (pt 0 208)(pt 192 208))
+		(line (pt 0 0)(pt 0 208))
+	)
+)

@@ -1,0 +1,62 @@
+
+State Machine - |MAXV_FULL|Blinker:inst12|blink_fsm
+Name led_9 led_plus ledon ledon_c idle ledoff 
+idle 0 0 0 0 0 0 
+ledon_c 0 0 0 1 1 0 
+ledon 0 0 1 0 1 0 
+ledoff 0 0 0 0 1 1 
+led_plus 0 1 0 0 1 0 
+led_9 1 0 0 0 1 0 
+
+State Machine - |MAXV_FULL|read_max44009:inst1|main_fsm
+Name endd endc endq read_q read_c read_d wr_src wr_srd wr_sr send_q send_c send_d startc startd idle 
+idle 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+startd 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 
+startc 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 
+send_d 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 
+send_c 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 
+send_q 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 
+wr_sr 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 
+wr_srd 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 
+wr_src 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 
+read_d 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 
+read_c 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 
+read_q 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 
+endq 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 
+endc 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 
+endd 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+
+State Machine - |MAXV_FULL|I2C_DRIVER2:inst13|comand
+Name comand.max_go comand.tel_go comand.ready 
+comand.ready 0 0 0 
+comand.tel_go 0 1 1 
+comand.max_go 1 0 1 
+
+State Machine - |MAXV_FULL|UFM_STORE:inst14|UFM_fsm
+Name load_ready wait_wr data_write2 data_ak data_write wait_data wr_addr0 wait_addr wr_addr erase_busy erase_wait stop data_shift wait_rd data_read addr_load addr_bit0 addr_prepare idle erase_out 
+idle 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+addr_prepare 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 
+addr_bit0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 0 
+addr_load 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 0 
+data_read 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 
+wait_rd 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 0 
+data_shift 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 
+stop 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 
+erase_wait 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 
+erase_out 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 
+erase_busy 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 
+wr_addr 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 
+wait_addr 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 
+wr_addr0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0 
+wait_data 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 
+data_write 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 
+data_ak 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 
+data_write2 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 
+wait_wr 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 
+load_ready 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 
+
+State Machine - |MAXV_FULL|MAX_MUX_VHDL:inst|comand
+Name comand.max_go comand.tel_go comand.ready 
+comand.ready 0 0 0 
+comand.tel_go 0 1 1 
+comand.max_go 1 0 1 

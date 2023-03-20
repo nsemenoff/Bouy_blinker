@@ -1,0 +1,16 @@
+SUBDESIGN SW_UART( Telit_TX : OUTPUT; Telit_RX : INPUT;
+                   BT_TX : OUTPUT; BT_RX : INPUT;
+						 Modem_TX : OUTPUT; Modem_RX : INPUT;
+						 Switch : INPUT)
+BEGIN
+
+--IF Switch then
+--	BT_TX = Modem_RX;
+--	Modem_TX = BT_RX;
+--ELSE
+	BT_TX = Telit_RX;
+	Telit_TX = BT_RX;
+	Modem_TX = BT_RX;
+--END IF;
+
+END;
